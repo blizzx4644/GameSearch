@@ -11,5 +11,20 @@
     { "src": "/static/(.*)", "dest": "/backend/static/$1" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/api/index.py" }
-  ]
+  ],
+  "functions": {
+    "api/index.py": {
+      "includedFiles": [
+        "backend/**",
+        "FitGirl/**",
+        "AnkerGames/**",
+        "CPGRepacks/**",
+        "CrackedGames/**",
+        "GameBounty/**",
+        "ByXatab/**",
+        "SteamRIP/**",
+        "GogGames/**"
+      ]
+    }
+  }
 }
