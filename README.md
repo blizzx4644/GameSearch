@@ -2,7 +2,7 @@
 
 Fast multi-source game search application with backend API and responsive frontend. Search across multiple repack sites from a single interface.
 
-## ✨ Features
+## Features
 
 - **Multi-source search**: Query multiple repack sites simultaneously
 - **Smart scoring**: Relevance-ranked results with canonical Steam name matching
@@ -39,7 +39,7 @@ Fast multi-source game search application with backend API and responsive fronte
 - **GameBounty**: Next.js site with multi-strategy parsing
 - **ByXatab**: DLE engine scraper with Russian/English support
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.8+
@@ -77,7 +77,7 @@ Visit `http://localhost:8000` to use the application.
 - **Slow mode**: All providers with optimized timeouts
 - **Custom mode**: User-selected sources via settings
 
-## 🌐 API Endpoints
+## API Endpoints
 
 ### Search
 ```
