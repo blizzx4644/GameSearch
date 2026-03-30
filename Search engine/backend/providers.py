@@ -152,7 +152,7 @@ def _coerce_link(provider: str, item: dict) -> dict | None:
     if not url or not name:
         return None
     out = {
-        "source": provider,
+        "provider": provider,
         "name": name,
         "url": url,
     }
