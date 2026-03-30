@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "api/index.py" },
+    { "src": "/static/(.*)", "dest": "/backend/static/$1" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/api/index.py" }
+  ]
+}

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        body {
+            background-color: #08090a;
+            color: #f9f9fd;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em;
+        }
+        h1, h2, h3, .nav-text {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        input::placeholder {
+            color: rgba(170, 171, 175, 0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#17c0fd",
+                        "outline": "#747579",
+                        "on-surface": "#f9f9fd",
+                        "on-secondary": "#00374c",
+                        "inverse-on-surface": "#535559",
+                        "surface-tint": "#69daff",
+                        "primary": "#69daff",
+                        "outline-variant": "#46484b",
+                        "tertiary": "#89a5ff",
+                        "secondary-fixed-dim": "#6ecfff",
+                        "on-error-container": "#ffa8a3",
+                        "background": "#08090a",
+                        "inverse-surface": "#f9f9fd",
+                        "surface-container-highest": "#23262a",
+                        "on-tertiary-fixed-variant": "#00318e",
+                        "primary-fixed-dim": "#00c0ea",
+                        "error": "#ff716c",
+                        "inverse-primary": "#006880",
+                        "surface-container-lowest": "#000000",
+                        "on-primary-fixed": "#002a35",
+                        "on-background": "#f9f9fd",
+                        "surface-container-low": "#111417",
+                        "tertiary-dim": "#7999ff",
+                        "on-surface-variant": "#aaabaf",
+                        "on-tertiary": "#00236d",
+                        "surface": "#08090a",
+                        "on-error": "#490006",
+                        "tertiary-fixed": "#95adff",
+                        "secondary-container": "#006688",
+                        "surface-container": "#171a1d",
+                        "on-tertiary-fixed": "#001345",
+                        "on-tertiary-container": "#001851",
+                        "surface-container-high": "#1d2024",
+                        "on-primary-container": "#004050",
+                        "surface-bright": "#292c31",
+                        "tertiary-container": "#7696fd",
+                        "surface-dim": "#08090a",
+                        "primary-fixed": "#00cffc",
+                        "on-secondary-fixed-variant": "#005775",
+                        "primary-container": "#00cffc",
+                        "secondary-dim": "#00b2ec",
+                        "error-dim": "#d7383b",
+                        "error-container": "#9f0519",
+                        "surface-variant": "#23262a",
+                        "on-secondary-container": "#f1f9ff",
+                        "on-primary": "#004a5d",
+                        "primary-dim": "#00c0ea",
+                        "on-primary-fixed-variant": "#004a5c",
+                        "tertiary-fixed-dim": "#819fff",
+                        "secondary-fixed": "#98daff",
+                        "on-secondary-fixed": "#00394e"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-surface selection:bg-primary/20 selection:text-primary">
+<header class="fixed top-0 left-0 right-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-8 max-w-screen-xl mx-auto">
+<div class="flex items-center gap-3 opacity-40 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary text-xl">grid_view</span>
+<span class="text-xs font-headline tracking-[0.3em] uppercase text-on-surface">GameSearch</span>
+</div>
+<button class="glass-card rounded-full w-10 h-10 flex items-center justify-center hover:bg-white/5 transition-colors" id="settings-trigger" aria-label="Settings">
+<span class="material-symbols-outlined text-outline/70 hover:text-primary">settings</span>
+</button>
+</div>
+</header>
+<main class="min-h-screen flex flex-col items-center justify-center px-6 max-w-screen-xl mx-auto pt-20">
+<!-- Centered Search Interface -->
+<section class="w-full max-w-2xl mb-10">
+<div class="relative">
+<div class="flex items-center gap-4 border-b border-outline-variant/20 focus-within:border-primary/40 transition-all duration-700 py-3 px-1">
+<span class="material-symbols-outlined text-outline/40">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xl font-headline font-light w-full text-on-surface" id="search-input" placeholder="Search title..." type="text"/>
+<button class="text-[10px] uppercase tracking-[0.2em] font-bold text-outline hover:text-primary transition-colors" id="search-trigger">
+                    Enter
+                </button>
+</div>
+<div class="absolute -bottom-6 left-1 text-[9px] uppercase tracking-[0.2em] text-outline/30" id="status-indicator">
+                Standby
+            </div>
+</div>
+</section>
+<!-- Error Container -->
+<div class="hidden glass-card px-4 py-2 mb-8 border-error/10 rounded-full" id="error-container">
+<div class="flex items-center gap-2 text-error/80">
+<span class="material-symbols-outlined text-sm">error</span>
+<p class="font-body text-[10px] uppercase tracking-wider">Entry not found</p>
+</div>
+</div>
+<!-- Results Display -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full" id="game-results">
+<!-- Main Result -->
+<div class="md:col-span-7 group relative aspect-[16/10] md:aspect-[21/9] overflow-hidden rounded-xl glass-card transition-all duration-700" id="featured-card">
+<a href="#" id="featured-link" rel="noreferrer" target="_blank" class="absolute inset-0 block z-10">
+<img class="absolute inset-0 w-full h-full object-cover object-center opacity-20 grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:opacity-40" data-alt="minimalist gaming visual" id="featured-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB3Cf9fUig8qOkRK38MpiOBfwlUynC2XFwPbnyxfGKQgIhHi6R9HCiax_hBv8UOL-sQg5CadND6z9PMjUQY1lrNijBMwXdi1uxrUydRl_hudko-cbCV0DGeHQDtB16j_XLWa1s4BYkhJ6H0vxn3MDyyOLW_b3_NM-FaUKhyavPCiSCi9btlhgX3ue5bEdEpn5e8QEx0upSH4pQbQ38ZboC4LDwhn2jK8_xLHIWwUEKcUGZNO9warbqVdPDKISLBt-vTxeaD6nl6RI"/>
+</a>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent pointer-events-none z-20"></div>
+<div class="absolute bottom-0 left-0 p-6 pointer-events-none z-30">
+<div class="flex gap-3 mb-3">
+<span class="text-[9px] font-bold tracking-[0.2em] uppercase text-primary/60">Featured</span>
+</div>
+<h2 class="text-2xl font-headline font-medium tracking-tight mb-2" id="featured-title">Ready</h2>
+<div class="flex items-center gap-2 text-[10px] text-outline-variant uppercase tracking-[0.2em]">
+<span id="meta-subline" class="text-outline/50">—</span>
+</div>
+</div>
+</div>
+<!-- Compact Metadata Side -->
+<div class="md:col-span-5 flex flex-col gap-6">
+<div class="glass-card p-6 rounded-xl flex-1">
+<div class="space-y-4">
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="text-outline/60 text-[10px] uppercase tracking-widest font-body">Dev</span>
+<span class="text-on-surface/80 text-xs font-headline" id="meta-dev">—</span>
+</div>
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="text-outline/60 text-[10px] uppercase tracking-widest font-body">Date</span>
+<span class="text-on-surface/80 text-xs font-headline" id="meta-date">—</span>
+</div>
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="text-outline/60 text-[10px] uppercase tracking-widest font-body">Platform</span>
+<span class="text-on-surface/80 text-xs font-headline" id="meta-platform">—</span>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5">
+<div class="flex justify-between items-center border-b border-white/5 pb-2">
+<span class="text-outline/60 text-[10px] uppercase tracking-widest font-body">Genres</span>
+<span class="text-on-surface/80 text-xs font-headline" id="meta-genres">—</span>
+</div>
+<div class="flex justify-between items-center border-b border-white/5 pb-2 mt-3">
+<span class="text-outline/60 text-[10px] uppercase tracking-widest font-body">Score</span>
+<span class="text-on-surface/80 text-xs font-headline" id="meta-score">—</span>
+</div>
+<div class="flex justify-between items-center border-b border-white/5 pb-2 mt-3">
+<span class="text-outline/60 text-[10px] uppercase tracking-widest font-body">Price</span>
+<span class="text-on-surface/80 text-xs font-headline" id="meta-price">—</span>
+</div>
+<div class="mt-4 text-on-surface/70 text-[11px] leading-relaxed font-body" id="meta-desc"></div>
+</div>
+<div class="mt-6 pt-4 border-t border-white/5" id="links-block">
+<div class="text-outline/60 text-[10px] uppercase tracking-widest font-body mb-3">Links</div>
+<div class="space-y-2" id="links-list"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<div class="hidden fixed inset-0 z-[60]" id="settings-modal" aria-hidden="true">
+<div class="absolute inset-0 bg-black/60 backdrop-blur-[2px]" id="settings-backdrop"></div>
+<div class="absolute top-24 right-6 left-6 md:left-auto md:w-[520px] max-w-[520px] glass-card rounded-2xl p-5">
+<div class="flex items-center justify-between">
+<div class="text-[10px] uppercase tracking-[0.2em] text-outline/60" id="settings-title">Parameters</div>
+<button class="w-9 h-9 rounded-full hover:bg-white/5 transition-colors flex items-center justify-center" id="settings-close" aria-label="Close">
+<span class="material-symbols-outlined text-outline/70">close</span>
+</button>
+</div>
+
+<div class="mt-4">
+<div class="text-[9px] uppercase tracking-[0.2em] text-outline/50" id="settings-lang-label">Language</div>
+<div class="mt-2 flex gap-2">
+<select class="bg-transparent border border-white/5 rounded-lg text-[11px] px-3 py-2 text-on-surface/80 focus:ring-0 focus:border-primary/40" id="lang-select">
+<option value="en">English</option>
+<option value="fr">Français</option>
+<option value="es">Español</option>
+<option value="de">Deutsch</option>
+</select>
+</div>
+</div>
+
+<div class="mt-5 pt-5 border-t border-white/5">
+<div class="flex items-center justify-between gap-4">
+<div class="text-[9px] uppercase tracking-[0.2em] text-outline/50" id="settings-sources-label">Sources</div>
+<div class="flex items-center gap-2">
+<button class="text-[9px] uppercase tracking-[0.2em] text-outline hover:text-primary transition-colors" id="mode-fast">Fast</button>
+<span class="text-outline/30 text-[10px]">|</span>
+<button class="text-[9px] uppercase tracking-[0.2em] text-outline hover:text-primary transition-colors" id="mode-all">All</button>
+</div>
+</div>
+<div class="mt-3 flex flex-wrap gap-2" id="sources-pills"></div>
+<div class="mt-3 text-outline/40 text-[10px] font-body" id="settings-hint">Tip: if none selected, mode is used.</div>
+</div>
+</div>
+</div>
+
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-8 px-8 py-3 glass-card rounded-full z-50">
+<span class="material-symbols-outlined text-primary text-xl">home</span>
+<span class="material-symbols-outlined text-outline/40 text-xl">search</span>
+<span class="material-symbols-outlined text-outline/40 text-xl">person</span>
+</nav>
+<!-- Minimal Atmosphere -->
+<div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(105,218,255,0.02),transparent_70%)]"></div>
+<script>
+    const searchTrigger = document.getElementById('search-trigger');
+    const statusIndicator = document.getElementById('status-indicator');
+    const errorContainer = document.getElementById('error-container');
+    const searchInput = document.getElementById('search-input');
+    const featuredTitle = document.getElementById('featured-title');
+    const featuredCard = document.getElementById('featured-card');
+    const featuredLink = document.getElementById('featured-link');
+    const featuredImage = document.getElementById('featured-image');
+    const metaDev = document.getElementById('meta-dev');
+    const metaDate = document.getElementById('meta-date');
+    const metaPlatform = document.getElementById('meta-platform');
+    const metaGenres = document.getElementById('meta-genres');
+    const metaScore = document.getElementById('meta-score');
+    const metaPrice = document.getElementById('meta-price');
+    const metaDesc = document.getElementById('meta-desc');
+    const metaSubline = document.getElementById('meta-subline');
+    const linksList = document.getElementById('links-list');
+    const sourcesPills = document.getElementById('sources-pills');
+    const modeFast = document.getElementById('mode-fast');
+    const modeAll = document.getElementById('mode-all');
+
+    const settingsTrigger = document.getElementById('settings-trigger');
+    const settingsModal = document.getElementById('settings-modal');
+    const settingsBackdrop = document.getElementById('settings-backdrop');
+    const settingsClose = document.getElementById('settings-close');
+    const langSelect = document.getElementById('lang-select');
+    const settingsTitle = document.getElementById('settings-title');
+    const settingsLangLabel = document.getElementById('settings-lang-label');
+    const settingsSourcesLabel = document.getElementById('settings-sources-label');
+    const settingsHint = document.getElementById('settings-hint');
+
+    let currentMode = 'fast';
+    let selectedSources = new Set();
+    let availableProviders = [];
+    let currentLang = 'en';
+
+    let inFlightController = null;
+    let inFlight = false;
+
+    const i18n = {
+        en: {
+            standby: 'Standby',
+            searching: 'Searching…',
+            no_links: 'No links',
+            no_providers: 'No providers',
+            entry_not_found: 'Entry not found',
+            settings: 'Parameters',
+            language: 'Language',
+            sources: 'Sources',
+            hint: 'Tip: if none selected, mode is used.',
+            placeholder: 'Search title…'
+        },
+        fr: {
+            standby: 'Prêt',
+            searching: 'Recherche…',
+            no_links: 'Aucun lien',
+            no_providers: 'Aucune source',
+            entry_not_found: 'Introuvable',
+            settings: 'Paramètres',
+            language: 'Langue',
+            sources: 'Sources',
+            hint: 'Astuce : si rien n\'est sélectionné, le mode est utilisé.',
+            placeholder: 'Rechercher un jeu…'
+        },
+        es: {
+            standby: 'Listo',
+            searching: 'Buscando…',
+            no_links: 'Sin enlaces',
+            no_providers: 'Sin fuentes',
+            entry_not_found: 'No encontrado',
+            settings: 'Parámetros',
+            language: 'Idioma',
+            sources: 'Fuentes',
+            hint: 'Consejo: si no hay selección, se usa el modo.',
+            placeholder: 'Buscar juego…'
+        },
+        de: {
+            standby: 'Bereit',
+            searching: 'Suche…',
+            no_links: 'Keine Links',
+            no_providers: 'Keine Quellen',
+            entry_not_found: 'Nicht gefunden',
+            settings: 'Einstellungen',
+            language: 'Sprache',
+            sources: 'Quellen',
+            hint: 'Tipp: Wenn nichts ausgewählt ist, wird der Modus verwendet.',
+            placeholder: 'Spiel suchen…'
+        },
+    };
+
+    function t(key){
+        const pack = i18n[currentLang] || i18n.en;
+        return pack[key] || i18n.en[key] || key;
+    }
+
+    function savePrefs(){
+        try {
+            localStorage.setItem('gs_mode', currentMode);
+            localStorage.setItem('gs_sources', JSON.stringify(Array.from(selectedSources)));
+            localStorage.setItem('gs_lang', currentLang);
+        } catch {}
+    }
+
+    function loadPrefs(){
+        try {
+            const m = localStorage.getItem('gs_mode');
+            if (m) currentMode = m;
+            const s = localStorage.getItem('gs_sources');
+            if (s) {
+                const arr = JSON.parse(s);
+                if (Array.isArray(arr)) selectedSources = new Set(arr.map(x => String(x)));
+            }
+            const l = localStorage.getItem('gs_lang');
+            if (l) currentLang = l;
+        } catch {}
+    }
+
+    function applyI18n(){
+        if (searchInput) searchInput.placeholder = t('placeholder');
+        const p = errorContainer?.querySelector('p');
+        if (p) p.textContent = t('entry_not_found');
+        if (settingsTitle) settingsTitle.textContent = t('settings');
+        if (settingsLangLabel) settingsLangLabel.textContent = t('language');
+        if (settingsSourcesLabel) settingsSourcesLabel.textContent = t('sources');
+        if (settingsHint) settingsHint.textContent = t('hint');
+        if (statusIndicator && statusIndicator.innerText === 'Standby') statusIndicator.innerText = t('standby');
+        if (langSelect) langSelect.value = currentLang;
+    }
+
+    function openSettings(){
+        if (!settingsModal) return;
+        settingsModal.classList.remove('hidden');
+        settingsModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeSettings(){
+        if (!settingsModal) return;
+        settingsModal.classList.add('hidden');
+        settingsModal.setAttribute('aria-hidden', 'true');
+    }
+
+    function setError(message) {
+        if (!message) {
+            errorContainer.classList.add('hidden');
+            return;
+        }
+        errorContainer.classList.remove('hidden');
+        const p = errorContainer.querySelector('p');
+        if (p) p.textContent = message;
+    }
+
+    function setStatus(text, busy) {
+        statusIndicator.innerText = text;
+        if (busy) statusIndicator.classList.add('animate-pulse');
+        else statusIndicator.classList.remove('animate-pulse');
+    }
+
+    function pickPrimaryUrl(data) {
+        const steamUrl = data?.metadata?.steam?.steam_url;
+        if (steamUrl) return steamUrl;
+        const rawgUrl = data?.metadata?.rawg?.rawg_url;
+        if (rawgUrl) return rawgUrl;
+        const first = data?.links?.[0]?.url;
+        return first || '#';
+    }
+
+    function setLoading(isLoading){
+        if (!featuredCard) return;
+        if (isLoading) {
+            featuredCard.classList.add('scale-[0.995]');
+            featuredCard.classList.add('opacity-80');
+        } else {
+            featuredCard.classList.remove('scale-[0.995]');
+            featuredCard.classList.remove('opacity-80');
+        }
+    }
+
+    async function bootstrapProviders(){
+        try {
+            const r = await fetch('/api/providers');
+            const data = await r.json().catch(() => ({}));
+            if (!r.ok) return;
+
+            availableProviders = Array.isArray(data?.available_providers) ? data.available_providers : [];
+            if (availableProviders.length) {
+                // Si aucune sélection: pré-sélectionner les fast connus en mode fast
+                if (selectedSources.size === 0 && currentMode === 'fast') {
+                    ['goggames','steamrip'].forEach(p => { if (availableProviders.includes(p)) selectedSources.add(p); });
+                    savePrefs();
+                }
+                renderSourcePills();
+            }
+        } catch {}
+    }
+
+    function renderSourcePills(){
+        if (!sourcesPills) return;
+        if (!availableProviders.length) {
+            sourcesPills.innerHTML = `<div class="text-outline/40 text-[10px] font-body">${t('no_providers')}</div>`;
+            return;
+        }
+
+        sourcesPills.innerHTML = availableProviders.map(pid => {
+            const active = selectedSources.has(pid);
+            const cls = active
+                ? 'border-primary/40 text-primary/90'
+                : 'border-white/5 text-outline/60 hover:border-primary/20 hover:text-on-surface/80';
+            return `
+              <button data-provider="${pid}" class="px-3 py-2 rounded-full border ${cls} transition-all duration-300 text-[9px] uppercase tracking-[0.2em]">
+                ${pid}
+              </button>
+            `;
+        }).join('');
+
+        sourcesPills.querySelectorAll('button[data-provider]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const pid = btn.getAttribute('data-provider');
+                if (!pid) return;
+                if (selectedSources.has(pid)) selectedSources.delete(pid);
+                else selectedSources.add(pid);
+                savePrefs();
+                renderSourcePills();
+            });
+        });
+    }
+
+    function renderLinks(links) {
+        if (!linksList) return;
+        const items = Array.isArray(links) ? links : [];
+        if (!items.length) {
+            linksList.innerHTML = `<div class="text-outline/40 text-[10px] font-body">${t('no_links')}</div>`;
+            return;
+        }
+
+        linksList.innerHTML = items.slice(0, 12).map(l => {
+            const src = (l?.source || 'source').toString();
+            const name = (l?.name || '').toString();
+            const url = (l?.url || '').toString();
+            const score = (typeof l?.score === 'number') ? l.score : null;
+            const label = [name, score !== null ? `score:${Math.round(score)}` : ''].filter(Boolean).join(' · ');
+            return `
+                <a class="block px-3 py-2 rounded-lg border border-white/5 hover:border-primary/30 hover:bg-white/5 transition-colors" href="${url}" target="_blank" rel="noreferrer">
+                  <div class="flex items-center justify-between gap-3">
+                    <div class="text-[10px] uppercase tracking-[0.2em] font-bold text-primary/60">${src}</div>
+                    <span class="material-symbols-outlined text-sm text-outline/50">north_east</span>
+                  </div>
+                  <div class="text-on-surface/80 text-[11px] font-body truncate">${label || url}</div>
+                </a>
+            `;
+        }).join('');
+    }
+
+    async function runSearch() {
+        const q = (searchInput?.value || '').trim();
+        if (!q) return;
+
+        if (inFlight) {
+            try { inFlightController?.abort(); } catch {}
+        }
+        inFlight = true;
+        inFlightController = new AbortController();
+
+        setError('');
+        setStatus(t('searching'), true);
+        setLoading(true);
+
+        if (searchTrigger) searchTrigger.setAttribute('disabled', 'disabled');
+
+        // reset small animation
+        if (featuredCard) {
+            featuredCard.classList.remove('translate-y-0');
+            featuredCard.classList.add('translate-y-[2px]');
+        }
+
+        try {
+            const t0 = performance.now();
+            const src = selectedSources.size ? `&sources=${encodeURIComponent(Array.from(selectedSources).join(','))}` : '';
+            const r = await fetch(`/api/search?q=${encodeURIComponent(q)}&mode=${encodeURIComponent(currentMode)}${src}`, { signal: inFlightController.signal });
+            const data = await r.json().catch(() => ({}));
+            const t1 = performance.now();
+            if (!r.ok) {
+                setError((data && data.detail) ? String(data.detail) : 'Search failed');
+                setStatus(t('standby'), false);
+                setLoading(false);
+                inFlight = false;
+                if (searchTrigger) searchTrigger.removeAttribute('disabled');
+                return;
+            }
+
+            availableProviders = Array.isArray(data?.available_providers) ? data.available_providers : [];
+            if (availableProviders.length && sourcesPills && sourcesPills.childElementCount === 0) {
+                // Par défaut, pré-sélectionner les providers fast (goggames/steamrip) si aucun choix utilisateur
+                if (selectedSources.size === 0 && currentMode === 'fast') {
+                    ['goggames','steamrip'].forEach(p => { if (availableProviders.includes(p)) selectedSources.add(p); });
+                }
+                renderSourcePills();
+            }
+
+            featuredTitle.textContent = data?.game?.name || q;
+
+            const steam = data?.metadata?.steam || null;
+            if (steam?.header_image && featuredImage) {
+                featuredImage.src = steam.header_image;
+                featuredImage.classList.remove('grayscale');
+                featuredImage.classList.add('opacity-30');
+            }
+
+            const primaryUrl = pickPrimaryUrl(data);
+            if (featuredLink) featuredLink.href = steam?.steam_url || primaryUrl;
+            if (metaSubline) {
+                const parts = [];
+                if (steam?.metacritic) parts.push(`Meta: ${steam.metacritic}`);
+                if (steam?.appid) parts.push(`AppID: ${steam.appid}`);
+                metaSubline.textContent = parts.length ? parts.join(' · ') : '—';
+            }
+
+            const release = data?.game?.release_date || steam?.release_date || data?.metadata?.rawg?.released || '—';
+            metaDate.textContent = release;
+
+            const providers = Array.isArray(data?.providers) ? data.providers : [];
+            if (steam?.platforms) {
+                const plats = [];
+                if (steam.platforms.windows) plats.push('Windows');
+                if (steam.platforms.mac) plats.push('Mac');
+                if (steam.platforms.linux) plats.push('Linux');
+                metaPlatform.textContent = plats.length ? plats.join(', ') : (providers.length ? providers.join(', ') : '—');
+            } else {
+                metaPlatform.textContent = providers.length ? providers.join(', ') : '—';
+            }
+
+            const devs = Array.isArray(steam?.developers) ? steam.developers.filter(Boolean) : [];
+            const pubs = Array.isArray(steam?.publishers) ? steam.publishers.filter(Boolean) : [];
+            const devLine = devs.length ? devs.slice(0, 2).join(', ') : '';
+            const pubLine = pubs.length ? pubs.slice(0, 2).join(', ') : '';
+            if (devLine && pubLine && devLine !== pubLine) metaDev.textContent = `${devLine} · ${pubLine}`;
+            else if (devLine) metaDev.textContent = devLine;
+            else if (pubLine) metaDev.textContent = pubLine;
+            else {
+                const genres = Array.isArray(data?.metadata?.rawg?.genres) ? data.metadata.rawg.genres.map(g => g?.name).filter(Boolean) : [];
+                metaDev.textContent = genres.length ? genres.slice(0, 3).join(', ') : '—';
+            }
+
+            const steamGenres = Array.isArray(steam?.genres) ? steam.genres.filter(Boolean) : [];
+            if (metaGenres) metaGenres.textContent = steamGenres.length ? steamGenres.slice(0, 4).join(', ') : '—';
+
+            if (metaScore) {
+                const scoreParts = [];
+                if (steam?.metacritic) scoreParts.push(`Metacritic ${steam.metacritic}`);
+                metaScore.textContent = scoreParts.length ? scoreParts.join(' · ') : '—';
+            }
+
+            if (metaPrice) {
+                const po = steam?.price_overview;
+                if (po?.final_formatted) metaPrice.textContent = po.final_formatted;
+                else if (po?.initial_formatted) metaPrice.textContent = po.initial_formatted;
+                else metaPrice.textContent = '—';
+            }
+
+            if (metaDesc) {
+                metaDesc.textContent = steam?.short_description ? steam.short_description : '';
+            }
+
+            renderLinks(data?.links);
+            const elapsedMs = Math.round(t1 - t0);
+            const srcLine = providers.length ? `Sources: ${providers.join(', ')} · ${elapsedMs}ms` : `${t('standby')} · ${elapsedMs}ms`;
+            setStatus(srcLine, false);
+            setLoading(false);
+
+            if (featuredCard) {
+                featuredCard.classList.remove('translate-y-[2px]');
+                featuredCard.classList.add('translate-y-0');
+            }
+
+            inFlight = false;
+            if (searchTrigger) searchTrigger.removeAttribute('disabled');
+        } catch (e) {
+            if (String(e).includes('AbortError')) {
+                // Ignorer: une nouvelle recherche a remplacé l'ancienne
+                return;
+            }
+            setError(String(e));
+            setStatus(t('standby'), false);
+            setLoading(false);
+            inFlight = false;
+            if (searchTrigger) searchTrigger.removeAttribute('disabled');
+        }
+    }
+
+    searchTrigger?.addEventListener('click', runSearch);
+    searchInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.repeat) runSearch();
+    });
+
+    modeFast?.addEventListener('click', () => {
+        currentMode = 'fast';
+        modeFast.classList.add('text-primary');
+        modeAll.classList.remove('text-primary');
+        savePrefs();
+    });
+    modeAll?.addEventListener('click', () => {
+        currentMode = 'all';
+        modeAll.classList.add('text-primary');
+        modeFast.classList.remove('text-primary');
+        savePrefs();
+    });
+
+    settingsTrigger?.addEventListener('click', openSettings);
+    settingsBackdrop?.addEventListener('click', closeSettings);
+    settingsClose?.addEventListener('click', closeSettings);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSettings();
+    });
+
+    langSelect?.addEventListener('change', () => {
+        currentLang = (langSelect?.value || 'en');
+        savePrefs();
+        applyI18n();
+        renderSourcePills();
+        renderLinks([]);
+    });
+
+    // Initial state
+    loadPrefs();
+    applyI18n();
+
+    if (currentMode === 'all') {
+        modeAll?.classList.add('text-primary');
+        modeFast?.classList.remove('text-primary');
+    } else {
+        modeFast?.classList.add('text-primary');
+        modeAll?.classList.remove('text-primary');
+    }
+
+    bootstrapProviders();
+</script>
+</body></html>
