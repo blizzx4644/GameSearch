@@ -208,6 +208,7 @@ def search_providers(
         return cached
 
     selected = _select_providers(mode=mode, sources=sources)
+    print(f"[DEBUG] Selected {len(selected)} providers: {[p['id'] for p in selected]}")
 
     links: list[dict] = []
     used: list[str] = []
@@ -217,19 +218,29 @@ def search_providers(
         path: Path = pconf["path"]
         kind = pconf["kind"]
 
+        print(f"[DEBUG] Running provider {provider}, path exists: {path.exists()}")
+        
         if not path.exists():
             return provider, []
         try:
             mod = _load_module(f"provider_{provider}", path)
-        except Exception:
+            print(f"[DEBUG] Provider {provider}: module loaded")
+        except Exception as e:
+            print(f"[DEBUG] Provider {provider}: failed to load - {e}")
             return provider, []
 
-        if kind == "steamrip":
-            results = _call_steamrip(mod, query, limit_per_provider)
-        elif kind == "goggames":
-            results = _call_goggames(mod, query, limit_per_provider)
-        else:
-            results = _call_do_search(mod, query, limit_per_provider)
+        try:
+            if kind == "steamrip":
+                results = _call_steamrip(mod, query, limit_per_provider)
+            elif kind == "goggames":
+                results = _call_goggames(mod, query, limit_per_provider)
+            else:
+                results = _call_do_search(mod, query, limit_per_provider)
+            
+            print(f"[DEBUG] Provider {provider}: got {len(results) if results else 0} results")
+        except Exception as e:
+            print(f"[DEBUG] Provider {provider}: execution failed - {e}")
+            return provider, []
 
         if not isinstance(results, list) or not results:
             return provider, []
@@ -244,6 +255,8 @@ def search_providers(
                     continue
             if l:
                 out.append(l)
+        
+        print(f"[DEBUG] Provider {provider}: returning {len(out)} links")
         return provider, out
 
     start = time.monotonic()
